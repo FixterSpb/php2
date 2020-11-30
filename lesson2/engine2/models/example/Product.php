@@ -1,15 +1,28 @@
 <?php
 
-namespace app\models\examples;
+namespace app\models\example;
 
-class Product extends Model {
-    public $id;
-    public $name;
-    public $description;
-    public $price;
+abstract class Product{
+    protected $name;
+    protected $group;
+    protected $price;
+    protected $factor;
+    protected $unitName;
+    static private $profit;
 
-    protected function getTableName() {
-        return "Product";
+    public function __construct($name, $price)
+    {
+        $this->name = $name;
+        $this->price = $price;
     }
 
+    public function buy($quantity){
+        $cost = $this->price * $this->factor * $quantity;
+        self::$profit += $cost;
+        echo "Куплен $this->group, $this->name, в количестве $quantity $this->unitName. Стоимость составила: $cost руб.";
+    }
+
+    static public function getProfit(){
+        return self::$profit;
+    }
 }

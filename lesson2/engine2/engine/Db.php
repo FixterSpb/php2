@@ -14,6 +14,8 @@ class Db
         return $sql;
     }
 
-    public function query($sql) {}
+    public function query($sql) {
+        return $sql;
+    }
 
 }
