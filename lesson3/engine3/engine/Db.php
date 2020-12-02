@@ -8,7 +8,7 @@ final class Db
 {
     protected $config = [
         'driver' => 'mysql',
-        'host' => 'php2.loc',
+        'host' => 'localhost',
         'login' => 'root',
         'password' => '',
         'database' => 'php2',

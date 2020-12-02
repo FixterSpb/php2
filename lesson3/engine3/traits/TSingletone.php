@@ -4,7 +4,7 @@ namespace app\traits;
 
 trait TSingletone
 {
-    //SINLETONE
+    //SINGLETONE
     protected static $instance = null;
 
     public static function getInstance() {

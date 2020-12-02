@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Дек 02 2020 г., 13:19
--- Версия сервера: 8.0.20
--- Версия PHP: 7.4.6
+-- Время создания: Дек 02 2020 г., 22:45
+-- Версия сервера: 8.0.19
+-- Версия PHP: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,13 +31,6 @@ CREATE TABLE `carts` (
   `id` int UNSIGNED NOT NULL,
   `user_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `carts`
---
-
-INSERT INTO `carts` (`id`, `user_id`) VALUES
-(1, 1);
 
 -- --------------------------------------------------------
 
@@ -68,7 +61,8 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `status`) VALUES
-(1, 'ноутбуки новые', 'active');
+(1, 'ноутбуки новые', 'active'),
+(4, 'Чай', 'active');
 
 -- --------------------------------------------------------
 
@@ -123,15 +117,7 @@ CREATE TABLE `products` (
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `sale`, `category_id`, `main_img`, `status`) VALUES
 (1, 'Ноутбук HP Chromebook x360 14b-ca0000ur серебристый', 'Встречайте универсальный ноутбук Chromebook, который обеспечивает необходимые производительность и развлекательные функции благодаря лучшим', '26999.00', 0, 1, '', 'active'),
 (2, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(3, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(4, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(5, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(6, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(7, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(8, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(9, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(10, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(11, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active');
+(13, 'Принцесса Дури', 'Вкусный цейлонский чай', '55.00', 0, 4, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -144,13 +130,6 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `pass` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `users`
---
-
-INSERT INTO `users` (`id`, `name`, `pass`) VALUES
-(1, 'Alex', '111');
 
 --
 -- Индексы сохранённых таблиц
@@ -211,13 +190,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `orders`
@@ -229,13 +208,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

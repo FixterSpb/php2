@@ -18,27 +18,20 @@ abstract class Model implements IModel
         return $this->$name;
     }
 
-
     public function getOne($id) {
-        $sql = "SELECT * FROM {$this->getTableName()} WHERE id = :id";
-        return Db::getInstance()->queryOne($sql, ["id" => $id]);
-    }
-
-    public function getObject($id) {
         $sql = "SELECT * FROM {$this->getTableName()} WHERE id = :id";
         Db::getInstance()->queryObject($sql, ["id" => $id], $this);
     }
 
     public function getAll() {
+
         $sql = "SELECT * FROM {$this->getTableName()}";
         return Db::getInstance()->queryAll($sql);
-
     }
 
     public function insert() {
 
         $params = [];
-
 
         foreach ($this as $key => $value) {
             if ($key == 'id') continue;
@@ -50,60 +43,52 @@ abstract class Model implements IModel
 
         $sql = "INSERT INTO `{$this->getTableName()}` ($sql_fields) VALUES ($sql_values)";
 
-        var_dump($sql);
+//        var_dump($sql);
+//        var_dump($params);
         Db::getInstance()->execute($sql, $params);
-//        $this->id = Db::getInstance()->lastInsertId(); У CartItem и OrderItem нет id, поэтому:
+//      Первый вариант:
+//        $this->id = Db::getInstance()->lastInsertId();
+//      Но у CartItem и OrderItem нет поля id, поэтому:
         if(property_exists($this, 'id')){
             $this->id = Db::getInstance()->lastInsertId();
         }
     }
 
     public function update() {
-        //У моделей cart_item и order_item нет id, однако все поля, заканчивающиеся на _id, составляют первичный ключ
-        $whereParams = $this->getParams();
 
-        echo "<pre>";
-        var_dump($whereParams);
+        $whereParams = $this->getFieldsID();
 
-        var_dump(
-        array_map(function($key){
-            if (!isset($whereParams[$key])) {
-//                continue;
-                echo "<pre>";
-                var_dump($key);
-                echo "</pre>";
-                return "`$key` = :$key";
+        $new_values = '';
+        $sql_where = '';
+
+        foreach ($this as $key => $value) {
+
+            if (isset($whereParams[$key])){
+
+                if(strlen($sql_where)){
+                    $sql_where .= ' AND ';
+                }
+
+                $sql_where .= "`$key` = :$key";
+                continue;
             }
-            return "`$key` = :$key";
-        }, array_keys((array)$this)));
 
-        print_r(array_keys((array)$this));
-        echo "</pre>";
-
-        $sql_where = implode(" AND ", array_map(fn($key) => "`$key` = :$key", array_keys($whereParams)));
-
-        $new_values = implode(", ", array_map(function($key){
-            if (!isset($whereParams[$key])) {
-                echo "<pre>";
-                var_dump($key);
-                echo "</pre>";
-                return "`$key` = :$key";
+            if (strlen($new_values)){
+                $new_values .= ', ';
             }
-            return;
-        }, array_keys((array)$this)));
+            $new_values .= "`$key` = :$key";
+        }
+
 
         $sql = "UPDATE `{$this->getTableName()}` SET $new_values WHERE $sql_where";
-        echo "<pre>";
-        var_dump($sql);
-        echo "</pre>";
-        die;
+//        var_dump($sql);
+//        die;
         Db::getInstance()->execute($sql, (array)$this);
     }
 
     public function delete() {
 
-        //У моделей cart_item и order_item нет id, однако все поля, заканчивающиеся на _id, составляют первичный ключ
-        $params = $this->getParams();
+        $params = $this->getFieldsID();
 
         $sql_params = implode(" AND ", array_map(fn($key) => "`$key` = :$key", array_keys($params)));
 
@@ -111,7 +96,15 @@ abstract class Model implements IModel
         Db::getInstance()->execute($sql, $params);
     }
 
-    private function getParams(){
+    /**
+     * Если существует поле id, возвращает массив ['id' => значение], иначе
+     * возвращает массив с полями, заканчивающимися на "_id".
+     * Пример: CartItem имеет поля product_id, cart_id, qty.
+     * Метод вернет ['product_id' => значение, 'cart_id' => значение]
+     *
+     * @return array
+     */
+    private function getFieldsID(){
 
         $params = [];
 
@@ -126,7 +119,6 @@ abstract class Model implements IModel
 
         return $params;
     }
-
 
     abstract protected function getTableName();
 }

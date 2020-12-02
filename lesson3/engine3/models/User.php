@@ -6,13 +6,13 @@ namespace app\models;
 class User extends Model
 {
     public $id;
-    public $login;
+    public $name;
     public $pass;
 
 
-    public function __construct($login = null, $pass = null)
+    public function __construct($name = null, $pass = null)
     {
-        $this->login = $login;
+        $this->name = $name;
         $this->pass = $pass;
     }
 

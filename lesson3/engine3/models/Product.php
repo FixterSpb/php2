@@ -25,7 +25,7 @@ class Product extends Model {
     }
 
 
-    protected function getTableName() {
+    public function getTableName() {
         return "products";
     }
 
