@@ -19,8 +19,10 @@ abstract class Model implements IModel
     }
 
     public function getOne($id) {
+
         $sql = "SELECT * FROM {$this->getTableName()} WHERE id = :id";
         Db::getInstance()->queryObject($sql, ["id" => $id], $this);
+
     }
 
     public function getAll() {
@@ -56,7 +58,8 @@ abstract class Model implements IModel
 
     public function update() {
 
-        $whereParams = $this->getFieldsID();
+        //$whereParams = $this->getFieldsID(); //Второй вариант
+        $whereParams = $this->getFieldsID_3(); //Третий вариант
 
         $new_values = '';
         $sql_where = '';
@@ -88,7 +91,8 @@ abstract class Model implements IModel
 
     public function delete() {
 
-        $params = $this->getFieldsID();
+//        $params = $this->getFieldsID(); //Второй вариант
+        $params = $this->getFieldsID_3(); //Третий вариант
 
         $sql_params = implode(" AND ", array_map(fn($key) => "`$key` = :$key", array_keys($params)));
 
@@ -118,6 +122,22 @@ abstract class Model implements IModel
         }
 
         return $params;
+    }
+
+    private function getFieldsID_3(){
+
+        $params = [];
+
+        foreach ($this->getPrimaryKey() as $item) {
+            $params[$item['Column_name']] = $this->{$item['Column_name']};
+        }
+
+        return $params;
+    }
+
+    private function getPrimaryKey(){
+        $sql = "SHOW INDEX FROM {$this->getTableName()} WHERE key_name = 'PRIMARY'";
+        return Db::getInstance()->queryAll($sql);
     }
 
     abstract protected function getTableName();
