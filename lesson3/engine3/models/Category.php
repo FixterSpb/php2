@@ -6,7 +6,6 @@ namespace app\models;
 
 class Category extends Model
 {
-    public $id;
     public $name;
     public $status;
 
@@ -17,7 +16,7 @@ class Category extends Model
         $this->status = $status;
     }
 
-    protected function getTableName()
+    static protected function getTableName()
     {
         return "categories";
     }

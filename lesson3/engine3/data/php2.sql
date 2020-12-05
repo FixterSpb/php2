@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Дек 02 2020 г., 22:45
+-- Время создания: Дек 05 2020 г., 08:32
 -- Версия сервера: 8.0.19
 -- Версия PHP: 7.4.4
 
@@ -39,6 +39,7 @@ CREATE TABLE `carts` (
 --
 
 CREATE TABLE `cart_item` (
+  `id` int UNSIGNED NOT NULL,
   `product_id` int UNSIGNED NOT NULL,
   `cart_id` int UNSIGNED NOT NULL,
   `qty` int UNSIGNED NOT NULL
@@ -85,6 +86,7 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `order_item` (
+  `id` int UNSIGNED NOT NULL,
   `order_id` int UNSIGNED NOT NULL,
   `product_id` int UNSIGNED NOT NULL,
   `price` decimal(22,2) NOT NULL,
@@ -146,8 +148,9 @@ ALTER TABLE `carts`
 -- Индексы таблицы `cart_item`
 --
 ALTER TABLE `cart_item`
-  ADD PRIMARY KEY (`product_id`,`cart_id`),
-  ADD KEY `fk_cart_item_carts` (`cart_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `cart_id` (`cart_id`);
 
 --
 -- Индексы таблицы `categories`
@@ -166,8 +169,9 @@ ALTER TABLE `orders`
 -- Индексы таблицы `order_item`
 --
 ALTER TABLE `order_item`
-  ADD PRIMARY KEY (`order_id`,`product_id`),
-  ADD KEY `fk_product_id` (`product_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Индексы таблицы `products`
@@ -190,7 +194,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT для таблицы `cart_item`
+--
+ALTER TABLE `cart_item`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
@@ -205,6 +215,12 @@ ALTER TABLE `orders`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT для таблицы `order_item`
+--
+ALTER TABLE `order_item`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
@@ -214,7 +230,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -230,21 +246,21 @@ ALTER TABLE `carts`
 -- Ограничения внешнего ключа таблицы `cart_item`
 --
 ALTER TABLE `cart_item`
-  ADD CONSTRAINT `fk_cart_item_carts` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `fk_cart_item_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `fk_cart_id` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `fk_cart_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ограничения внешнего ключа таблицы `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `fk_order_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ограничения внешнего ключа таблицы `order_item`
 --
 ALTER TABLE `order_item`
-  ADD CONSTRAINT `fk_order_item` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
-  ADD CONSTRAINT `fk_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+  ADD CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `fk_order_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ограничения внешнего ключа таблицы `products`

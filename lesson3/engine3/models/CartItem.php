@@ -10,7 +10,7 @@ class CartItem extends Model
     public $cart_id;
     public $qty;
 
-    protected function getTableName(){
+    static protected function getTableName(){
         return "cart_item";
     }
 

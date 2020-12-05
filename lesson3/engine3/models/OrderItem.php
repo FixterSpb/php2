@@ -26,7 +26,7 @@ class OrderItem extends Model
     }
 
 
-    protected function getTableName()
+    static protected function getTableName()
     {
         return "order_item";
     }

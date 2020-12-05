@@ -3,7 +3,6 @@
 namespace app\models;
 
 class Product extends Model {
-    public $id;
     public $name;
     public $description;
     public $price;
@@ -25,7 +24,7 @@ class Product extends Model {
     }
 
 
-    public function getTableName() {
+    static protected function getTableName() {
         return "products";
     }
 

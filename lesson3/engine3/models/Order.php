@@ -7,7 +7,6 @@ namespace app\models;
 class Order extends Model
 {
 
-    public $id;
     public $user_id;
     public $user_comment;
     public $amount;
@@ -28,7 +27,7 @@ class Order extends Model
         $this->status = $status;
     }
 
-    protected function getTableName()
+    static protected function getTableName()
     {
         return "orders";
     }
