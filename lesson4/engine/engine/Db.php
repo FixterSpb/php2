@@ -45,6 +45,12 @@ final class Db
         return $stmt;
     }
 
+    public function queryLimit($sql, $page) {
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bindValue(':page', $page, \PDO::PARAM_INT);
+        return []; //TODO вернуть результат Execute
+    }
+
     public function lastInsertId() {
         return $this->getConnection()->lastInsertId();
     }
@@ -58,7 +64,6 @@ final class Db
     public function execute($sql, $params = []) {
         return $this->query($sql, $params)->rowCount();
     }
-
 
     public function queryOne($sql, $params = []) {
         return $this->query($sql, $params)->fetch();

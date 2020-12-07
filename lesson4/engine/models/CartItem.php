@@ -4,8 +4,9 @@
 namespace app\models;
 
 
-class CartItem extends Model
+class CartItem extends DBModel
 {
+    protected $id;
     public $product_id;
     public $cart_id;
     public $qty;

@@ -4,8 +4,9 @@
 namespace app\models;
 
 
-class Category extends Model
+class Category extends DBModel
 {
+    protected $id;
     public $name;
     public $status;
 

@@ -10,12 +10,21 @@ use app\engine\Db;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
+//$product = new Product('Наименование товара', 'Описание', 31999, 0, 1, '', 'active');
+$product = Product::getOne(12);
+$product->price = 21999;
+$product->save();
+
+$product->id = "fvndsrhsfvhn";
+var_dump($product);
+
+
 /*
  * Интересно было посмотреть, как будут добавляться товары в корзину,
  * поэтому удалил уникальный ключ из users.name и экспериментировал.
  * В ключевых местах die не стал удалять, а просто закомментировал.
  */
-
+/*
 //CREATE
 
 $user = new User('Alex', '111');
@@ -44,3 +53,4 @@ $cartItem->delete();
 $cart->delete();
 $user->delete();
 die;
+*/
