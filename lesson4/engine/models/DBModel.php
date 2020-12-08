@@ -9,9 +9,9 @@ abstract class DBModel extends Model
 {
     protected $id;
 
-    public static function getOne($id) {
+    public function getOne($id) {
         $sql = "SELECT * FROM `" . static::getTableName() . "` WHERE `id` = :id";
-        return Db::getInstance()->queryObject($sql, ["id" => $id], static::class);
+        return Db::getInstance()->queryObject($sql, ["id" => $id], $this);
 
     }
 

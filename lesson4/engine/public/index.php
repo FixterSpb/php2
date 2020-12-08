@@ -10,13 +10,15 @@ use app\engine\Db;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
+$product = new Product(1);
+//$product->new();
 //$product = new Product('Наименование товара', 'Описание', 31999, 0, 1, '', 'active');
-$product = Product::getOne(12);
-$product->price = 21999;
-$product->save();
-
-$product->id = "fvndsrhsfvhn";
-var_dump($product);
+//$product = Product::getOne(12);
+//$product->price = 21999;
+//$product->save();
+//
+//$product->id = "fvndsrhsfvhn";
+//var_dump($product);
 
 
 /*

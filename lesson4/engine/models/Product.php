@@ -21,7 +21,14 @@ class Product extends DBModel {
         'status' => false,
     ];
 
-    public function __construct($name = null, $description = null, $price = null, $sale = null,
+    public function __call($name, $args){
+        echo $name;
+    }
+//    public function __callStatic($name, $args){
+//        echo $name;
+//    }
+
+    public function constructor($name, $description = null, $price = null, $sale = null,
                                 $category_id = null, $main_img = null, $status = null)
     {
         $this->name = $name;
@@ -34,6 +41,17 @@ class Product extends DBModel {
 
     }
 
+    public function __construct(){
+        $argsCount = func_num_args();
+        $args = func_get_args();
+        var_dump($args);
+
+        if ($argsCount === 1 && is_numeric($args[0])) {
+            static::getOne($args[0]);
+        }else{
+            var_dump($args);
+        }
+    }
 
     static protected function getTableName() {
         return "products";

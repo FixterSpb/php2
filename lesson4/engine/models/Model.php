@@ -21,5 +21,9 @@ abstract class Model implements IModel
         return $this->$name;
     }
 
+    public function __call($name, $args){
+        var_dump($name);
+    }
+
     abstract static protected function getTableName();
 }
