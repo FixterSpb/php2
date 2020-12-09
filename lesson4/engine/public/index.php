@@ -23,7 +23,7 @@ if (class_exists($controllerClass)) {
 
 
 
-//$product = new Product(2);
+//$product = new Product(1);
 //$product->new();
 //$product = new Product('Наименование товара', 'Описание', 31999, 0, 1, '', 'active');
 //$product = Product::getOne(13);

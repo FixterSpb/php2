@@ -39,18 +39,23 @@ class Product extends DBModel {
     {
         $values = func_get_args();
         if (count($values) === 1 && is_numeric($id = $values[0])){
-            return $this->getOne_1($id);
+            $this->getOne_1($id);
+            foreach ($this->props as $key => $value){
+                $this->props[$key] = false;
+            }
+        }else {
+
+            $this->name = isset($values[0]) ? $values[0] : '';
+            $this->category_id = isset($values[1]) ? $values[1] : 0;
+            $this->price = isset($values[2]) ? $values[2] : 0;
+            $this->sale = isset($values[3]) ? $values[3] : 0;
+            $this->status = isset($values[4]) ? $values[4] : '';
+            $this->main_img = isset($values[5]) ? $values[5] : '';
+            $this->description = isset($values[6]) ? $values[6] : '';
         }
 
-        $this->name = isset($values[0]) ? $values[0] : '';
-        $this->category_id = isset($values[1]) ? $values[1] : 0;
-        $this->price = isset($values[2]) ? $values[2] : 0;
-        $this->sale = isset($values[3]) ? $values[3] : 0;
-        $this->status = isset($values[4]) ? $values[4] : '';
-        $this->main_img = isset($values[5]) ? $values[5] : '';
-        $this->description = isset($values[6]) ? $values[6] : '';
-
     }
+
     static protected function getTableName() {
         return "products";
     }
