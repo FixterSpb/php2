@@ -4,14 +4,24 @@
 namespace app\models;
 
 
-class OrderItem extends Model
+class OrderItem extends DBModel
 {
-    public $order_id;
-    public $product_id;
-    public $price;
-    public $qty;
-    public $sale;
-    public $amount;
+    protected $id;
+    protected $order_id;
+    protected $product_id;
+    protected $price;
+    protected $qty;
+    protected $sale;
+    protected $amount;
+    protected $props =
+        [
+            'order_id' => false,
+            'product_id' => false,
+            'price' => false,
+            'qty' => false,
+            'sale' => false,
+            'amount' => false,
+        ];
 
     public function __construct($order_id = null, $product_id = null,
                                 $price = null, $qty = null,

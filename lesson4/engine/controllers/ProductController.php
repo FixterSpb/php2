@@ -15,8 +15,8 @@ class ProductController extends Controller
 
     public function actionCatalog()
     {
-        $page = $_GET['page']; //1
-        $catalog = Product::getAll();//getLimit($page * PRODUCT_PER_PAGE)
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $catalog = Product::getLimit($page * PRODUCT_PER_PAGE);
 
         echo $this->render('catalog', [
             'catalog' => $catalog,
@@ -28,7 +28,7 @@ class ProductController extends Controller
     {
         $id = (int)$_GET['id'];
         echo $this->render('card', [
-            'product' => Product::getOne($id)
+            'product' => new Product($id)
         ]);
     }
 }

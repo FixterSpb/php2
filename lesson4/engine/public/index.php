@@ -4,18 +4,33 @@ include "../config/config.php";
 include "../engine/Autoload.php";
 
 use app\engine\Autoload;
-use app\models\{Product, User, Cart, CartItem, Category};
+use app\models\{Product, User, Cart, CartItem, Category, Basket};
 
 use app\engine\Db;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
-$product = new Product(1);
+
+$controllerName = isset($_GET['c']) ? $_GET['c'] : 'product';
+$actionName = isset($_GET['a']) ? $_GET['a'] : null;
+
+$controllerClass =  CONTROLLER_NAMESPACE . ucfirst($controllerName) . "Controller";
+
+if (class_exists($controllerClass)) {
+    $controller = new $controllerClass();
+    $controller->runAction($actionName);
+}
+
+
+
+//$product = new Product(2);
 //$product->new();
 //$product = new Product('Наименование товара', 'Описание', 31999, 0, 1, '', 'active');
-//$product = Product::getOne(12);
-//$product->price = 21999;
+//$product = Product::getOne(13);
+//$product->price = 55;
+//var_dump($product);
 //$product->save();
+//var_dump($product);
 //
 //$product->id = "fvndsrhsfvhn";
 //var_dump($product);

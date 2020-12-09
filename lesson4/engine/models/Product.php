@@ -3,6 +3,7 @@
 namespace app\models;
 
 class Product extends DBModel {
+    protected $id;
     protected $name;
     protected $description;
     protected $price;
@@ -11,7 +12,7 @@ class Product extends DBModel {
     protected $main_img;
     protected $status;
 
-    protected $props = [
+    protected array $props = [
         'name' => false,
         'description' => false,
         'price' => false,
@@ -21,38 +22,35 @@ class Product extends DBModel {
         'status' => false,
     ];
 
-    public function __call($name, $args){
-        echo $name;
-    }
-//    public function __callStatic($name, $args){
-//        echo $name;
+//    protected function __construct($name = null, $description = null, $price = 0, $sale = 0,
+//                                $category_id = 0, $main_img = null, $status = 'active')
+//    {
+//        $this->name = $name;
+//        $this->category_id = $category_id;
+//        $this->price = $price;
+//        $this->sale = $sale;
+//        $this->status = $status;
+//        $this->main_img = $main_img;
+//        $this->description = $description;
+//
 //    }
 
-    public function constructor($name, $description = null, $price = null, $sale = null,
-                                $category_id = null, $main_img = null, $status = null)
+    public function __construct()
     {
-        $this->name = $name;
-        $this->description = $description;
-        $this->price = $price;
-        $this->sale = $sale;
-        $this->category_id = $category_id;
-        $this->main_img = $main_img;
-        $this->status = $status;
-
-    }
-
-    public function __construct(){
-        $argsCount = func_num_args();
-        $args = func_get_args();
-        var_dump($args);
-
-        if ($argsCount === 1 && is_numeric($args[0])) {
-            static::getOne($args[0]);
-        }else{
-            var_dump($args);
+        $values = func_get_args();
+        if (count($values) === 1 && is_numeric($id = $values[0])){
+            return $this->getOne_1($id);
         }
-    }
 
+        $this->name = isset($values[0]) ? $values[0] : '';
+        $this->category_id = isset($values[1]) ? $values[1] : 0;
+        $this->price = isset($values[2]) ? $values[2] : 0;
+        $this->sale = isset($values[3]) ? $values[3] : 0;
+        $this->status = isset($values[4]) ? $values[4] : '';
+        $this->main_img = isset($values[5]) ? $values[5] : '';
+        $this->description = isset($values[6]) ? $values[6] : '';
+
+    }
     static protected function getTableName() {
         return "products";
     }

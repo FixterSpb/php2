@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Дек 05 2020 г., 08:32
+-- Время создания: Дек 09 2020 г., 03:40
 -- Версия сервера: 8.0.19
 -- Версия PHP: 7.4.4
 
@@ -32,6 +32,13 @@ CREATE TABLE `carts` (
   `user_id` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `carts`
+--
+
+INSERT INTO `carts` (`id`, `user_id`) VALUES
+(29, 25);
+
 -- --------------------------------------------------------
 
 --
@@ -44,6 +51,14 @@ CREATE TABLE `cart_item` (
   `cart_id` int UNSIGNED NOT NULL,
   `qty` int UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `cart_item`
+--
+
+INSERT INTO `cart_item` (`id`, `product_id`, `cart_id`, `qty`) VALUES
+(8, 13, 29, 5),
+(9, 1, 29, 2);
 
 -- --------------------------------------------------------
 
@@ -134,6 +149,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `pass`) VALUES
+(25, 'Alex', '123');
+
+--
 -- Индексы сохранённых таблиц
 --
 
@@ -194,13 +216,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT для таблицы `cart_item`
 --
 ALTER TABLE `cart_item`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
@@ -224,13 +246,13 @@ ALTER TABLE `order_item`
 -- AUTO_INCREMENT для таблицы `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц

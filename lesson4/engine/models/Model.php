@@ -10,19 +10,14 @@ abstract class Model implements IModel
 {
 
     public function __set($name, $value) {
-        if ($name === 'id') return;
 
-        $this->props[$name] = true;
-        echo "<br>", $name, " => ", $value, "<br>";
+        if(isset($this->props[$name])) $this->props[$name] = true;
+
         $this->$name = $value;
     }
 
     public function __get($name) {
         return $this->$name;
-    }
-
-    public function __call($name, $args){
-        var_dump($name);
     }
 
     abstract static protected function getTableName();

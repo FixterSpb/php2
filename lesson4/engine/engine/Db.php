@@ -48,7 +48,8 @@ final class Db
     public function queryLimit($sql, $page) {
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bindValue(':page', $page, \PDO::PARAM_INT);
-        return []; //TODO вернуть результат Execute
+        $stmt->execute();
+        return $stmt->fetchAll(); //TODO вернуть результат Execute
     }
 
     public function lastInsertId() {
@@ -56,6 +57,13 @@ final class Db
     }
 
     public function queryObject($sql, $params = [], $class) {
+        $stmt = $this->query($sql, $params);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
+//        $stmt->setFetchMode(\PDO::FETCH_INTO, $class);
+        return $stmt->fetch();
+    }
+
+    public function queryObject_1($sql, $params = [], $class) {
         $stmt = $this->query($sql, $params);
 //        $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
         $stmt->setFetchMode(\PDO::FETCH_INTO, $class);

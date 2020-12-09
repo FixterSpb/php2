@@ -7,8 +7,14 @@ namespace app\models;
 class Category extends DBModel
 {
     protected $id;
-    public $name;
-    public $status;
+    protected $name;
+    protected $status;
+
+    protected $props =
+        [
+            'name' => false,
+            'status' => false,
+        ];
 
 
     public function __construct($name = null, $status = 'active')
