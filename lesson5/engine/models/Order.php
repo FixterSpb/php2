@@ -4,13 +4,14 @@
 namespace app\models;
 
 
-class Order extends Model
+class Order extends DBModel
 {
     protected $id;
     protected $user_id;
     protected $user_comment;
     protected $amount;
     protected $status;
+
     protected $props =
         [
             'user_id' => false,

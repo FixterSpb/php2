@@ -11,6 +11,7 @@ class Basket extends DBModel
     protected $product_id;
     protected $cart_id;
     protected $qty;
+
     protected $props =
     [
         'product_id' => true,

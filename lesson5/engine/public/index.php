@@ -2,72 +2,30 @@
 
 include "../config/config.php";
 include "../engine/Autoload.php";
+require_once '../vendor/autoload.php';
+require_once '../helpers/helper.php';
 
-use app\engine\Autoload;
+use app\engine\{Autoload, Render, TwigRender};
 use app\models\{Product, User, Cart, CartItem, Category, Basket};
 
 use app\engine\Db;
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
+//Отбросил get-параметры:
+$url = explode('/', explode('?', $_SERVER['REQUEST_URI'])[0]);
 
-$controllerName = isset($_GET['c']) ? $_GET['c'] : 'product';
-$actionName = isset($_GET['a']) ? $_GET['a'] : null;
+//В этом случае на странице вываливаются Notice (что, в том числе, может сломать json-ответ):
+//$controllerName = $url[1] ?: 'product';
+//$actionName = $url[2];
+
+//Поэтому добавил функцию, она заодно экранирует спецсимволы и убирает html-тэги:
+$controllerName = array_get($url, 1, 'product');
+$actionName = array_get($url, 2);
 
 $controllerClass =  CONTROLLER_NAMESPACE . ucfirst($controllerName) . "Controller";
 
 if (class_exists($controllerClass)) {
-    $controller = new $controllerClass();
+    $controller = new $controllerClass(new TwigRender());
     $controller->runAction($actionName);
 }
-
-
-
-//$product = new Product(1);
-//$product->new();
-//$product = new Product('Наименование товара', 'Описание', 31999, 0, 1, '', 'active');
-//$product = Product::getOne(13);
-//$product->price = 55;
-//var_dump($product);
-//$product->save();
-//var_dump($product);
-//
-//$product->id = "fvndsrhsfvhn";
-//var_dump($product);
-
-
-/*
- * Интересно было посмотреть, как будут добавляться товары в корзину,
- * поэтому удалил уникальный ключ из users.name и экспериментировал.
- * В ключевых местах die не стал удалять, а просто закомментировал.
- */
-/*
-//CREATE
-
-$user = new User('Alex', '111');
-$user->insert();
-
-$cart = new Cart($user->id);
-$cart->insert();
-
-$product = Product::getOne(1);
-
-$cartItem = new CartItem($product->id, $cart->id, 10);
-$cartItem->insert();
-
-//var_dump($user, $cart, $product, $cartItem);
-//die;
-
-//UPDATE
-$cartItem->qty = 5;
-$cartItem->update();
-
-var_dump($cartItem);
-//die;
-
-//DELETE
-$cartItem->delete();
-$cart->delete();
-$user->delete();
-die;
-*/

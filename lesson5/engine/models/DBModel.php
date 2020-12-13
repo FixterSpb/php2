@@ -13,14 +13,8 @@ abstract class DBModel extends Model
         return Db::getInstance()->queryObject($sql, ["id" => $id], static::class);
 
     }
-    public function getOne_1($id) {
-        $sql = "SELECT * FROM `" . static::getTableName() . "` WHERE `id` = :id";
-        return Db::getInstance()->queryObject_1($sql, ["id" => $id], $this);
-
-    }
 
     public static function getLimit($page){
-//        $tableName = static::getTableName();
         $sql = "SELECT * FROM `" . static::getTableName() . "` LIMIT 0, :page";
         return Db::getInstance()->queryLimit($sql, $page);
     }
@@ -57,15 +51,13 @@ abstract class DBModel extends Model
         }
 
         $new_values = implode(', ', array_map(fn($key) => "`$key` = :$key", array_keys($params)));
-//        $sql = "UPDATE `" . static::getTableName() . "` SET $new_values WHERE `id` = $this->id";
 
         $params['id'] = $this->id;
         $sql = "UPDATE `{$this->getTableName()}` SET $new_values WHERE `id` = :id";
 
         if(Db::getInstance()->execute($sql, $params)) {
 
-            foreach ($params as $key => $value) {
-                if ($key === 'id') continue;
+            foreach ($this->props as $key => $value) {
                 $this->props[$key] = false;
             }
         }

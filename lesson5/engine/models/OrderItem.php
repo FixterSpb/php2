@@ -13,6 +13,7 @@ class OrderItem extends DBModel
     protected $qty;
     protected $sale;
     protected $amount;
+
     protected $props =
         [
             'order_id' => false,

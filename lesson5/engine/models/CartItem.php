@@ -10,6 +10,7 @@ class CartItem extends DBModel
     protected $product_id;
     protected $cart_id;
     protected $qty;
+
     protected $props = [
         'product_id' => false,
         'cart_id' => false,

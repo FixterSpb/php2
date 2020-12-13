@@ -49,7 +49,7 @@ final class Db
         $stmt = $this->getConnection()->prepare($sql);
         $stmt->bindValue(':page', $page, \PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(); //TODO вернуть результат Execute
+        return $stmt->fetchAll();
     }
 
     public function lastInsertId() {
@@ -70,7 +70,7 @@ final class Db
         return $stmt->fetch();
     }
 
-    public function execute($sql, $params = []) {
+    public function execute($sql, $params) {
         return $this->query($sql, $params)->rowCount();
     }
 

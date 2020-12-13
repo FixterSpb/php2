@@ -8,6 +8,7 @@ class User extends DBModel
     protected $id;
     protected $name;
     protected $pass;
+
     protected $props =
         [
             'name' => false,
