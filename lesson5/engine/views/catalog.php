@@ -8,4 +8,4 @@
 <hr>
 <?php endforeach;?>
 
-<a href="/?c=product&a=catalog&page=<?=$page?>">Далее</a>
+<a href="/product/catalog?page=<?=$page?>">Далее</a>
