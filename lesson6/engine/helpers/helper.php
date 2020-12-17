@@ -7,8 +7,8 @@
 
     }
 
-    if (!function_exists('vdd')){
-        function vdd(...$args){
+    if (!function_exists('dd')){
+        function dd(...$args){
             foreach ($args as $value){
                 var_dump($value);
             }

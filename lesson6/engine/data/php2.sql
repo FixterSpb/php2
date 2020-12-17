@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Дек 09 2020 г., 03:40
+-- Время создания: Дек 17 2020 г., 22:38
 -- Версия сервера: 8.0.19
 -- Версия PHP: 7.4.4
 
@@ -24,41 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `carts`
+-- Структура таблицы `basket`
 --
 
-CREATE TABLE `carts` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `carts`
---
-
-INSERT INTO `carts` (`id`, `user_id`) VALUES
-(29, 25);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cart_item`
---
-
-CREATE TABLE `cart_item` (
-  `id` int UNSIGNED NOT NULL,
+CREATE TABLE `basket` (
+  `id` int NOT NULL,
+  `session_id` varchar(256) NOT NULL,
   `product_id` int UNSIGNED NOT NULL,
-  `cart_id` int UNSIGNED NOT NULL,
   `qty` int UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Дамп данных таблицы `cart_item`
+-- Дамп данных таблицы `basket`
 --
 
-INSERT INTO `cart_item` (`id`, `product_id`, `cart_id`, `qty`) VALUES
-(8, 13, 29, 5),
-(9, 1, 29, 2);
+INSERT INTO `basket` (`id`, `session_id`, `product_id`, `qty`) VALUES
+(10, 'fjfeob0b7irqejis74qiu038kr', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -134,7 +115,7 @@ CREATE TABLE `products` (
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `sale`, `category_id`, `main_img`, `status`) VALUES
 (1, 'Ноутбук HP Chromebook x360 14b-ca0000ur серебристый', 'Встречайте универсальный ноутбук Chromebook, который обеспечивает необходимые производительность и развлекательные функции благодаря лучшим', '26999.00', 0, 1, '', 'active'),
 (2, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
-(13, 'Принцесса Дури', 'Вкусный цейлонский чай', '55.00', 0, 4, NULL, 'active');
+(13, 'Принцесса Дури', 'Вкусный цейлонский чай', '56.00', 0, 4, NULL, 'active');
 
 -- --------------------------------------------------------
 
@@ -145,34 +126,30 @@ INSERT INTO `products` (`id`, `name`, `description`, `price`, `sale`, `category_
 CREATE TABLE `users` (
   `id` int UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
-  `pass` varchar(255) NOT NULL
+  `pass` varchar(255) NOT NULL,
+  `login` varchar(64) NOT NULL,
+  `session_id` varchar(256) NOT NULL,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `pass`) VALUES
-(25, 'Alex', '123');
+INSERT INTO `users` (`id`, `name`, `pass`, `login`, `session_id`, `role`) VALUES
+(25, 'Alex', '$2y$10$Ngr27/EVT0bVVaCtwldrA.G.AC3r7V4qqhqwGyyqp5.00v7Yd9ssW', 'Alex', 'vlfc6iuj99tqvado7o4iv9grvf', 'user');
 
 --
 -- Индексы сохранённых таблиц
 --
 
 --
--- Индексы таблицы `carts`
+-- Индексы таблицы `basket`
 --
-ALTER TABLE `carts`
+ALTER TABLE `basket`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id_user` (`user_id`);
-
---
--- Индексы таблицы `cart_item`
---
-ALTER TABLE `cart_item`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `cart_id` (`cart_id`);
+  ADD KEY `session_id` (`session_id`),
+  ADD KEY `fk_product_id` (`product_id`);
 
 --
 -- Индексы таблицы `categories`
@@ -206,23 +183,19 @@ ALTER TABLE `products`
 -- Индексы таблицы `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`),
+  ADD UNIQUE KEY `session_id` (`session_id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
 --
 
 --
--- AUTO_INCREMENT для таблицы `carts`
+-- AUTO_INCREMENT для таблицы `basket`
 --
-ALTER TABLE `carts`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
-
---
--- AUTO_INCREMENT для таблицы `cart_item`
---
-ALTER TABLE `cart_item`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+ALTER TABLE `basket`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT для таблицы `categories`
@@ -259,17 +232,10 @@ ALTER TABLE `users`
 --
 
 --
--- Ограничения внешнего ключа таблицы `carts`
+-- Ограничения внешнего ключа таблицы `basket`
 --
-ALTER TABLE `carts`
-  ADD CONSTRAINT `fk_carts_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
---
--- Ограничения внешнего ключа таблицы `cart_item`
---
-ALTER TABLE `cart_item`
-  ADD CONSTRAINT `fk_cart_id` FOREIGN KEY (`cart_id`) REFERENCES `carts` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `fk_cart_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `basket`
+  ADD CONSTRAINT `fk_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Ограничения внешнего ключа таблицы `orders`

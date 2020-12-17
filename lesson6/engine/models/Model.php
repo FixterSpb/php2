@@ -11,11 +11,10 @@ abstract class Model implements IModel
 
     public function __set($name, $value) {
 
-        if (!property_exists($this, $name)) return;
-
-        if(isset($this->props[$name])) $this->props[$name] = true;
-
-        $this->$name = $value;
+        if (property_exists($this, $name)){
+            $this->$name = $value;
+            if(isset($this->props[$name])) $this->props[$name] = true;
+        }
     }
 
     public function __get($name) {

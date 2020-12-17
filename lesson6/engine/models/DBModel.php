@@ -25,6 +25,19 @@ abstract class DBModel extends Model
         return Db::getInstance()->queryAll($sql);
     }
 
+    public static function getOneWhere($name, $value) {
+        $tableName = static::getTableName();
+        $sql = "SELECT * FROM {$tableName} WHERE `{$name}`=:value";
+        return Db::getInstance()->queryObject($sql, ['value' => $value], static::class);
+    }
+
+    protected static function getCountWhere($name, $value){
+        $tableName = static::getTableName();
+        $sql = "SELECT count(id) as count FROM `{$tableName}` WHERE `{$name}` = :value";
+
+        return Db::getInstance()->queryOne($sql, ['value' => $value])['count'];
+    }
+
     protected function insert() {
 
         $params = [];
@@ -66,7 +79,6 @@ abstract class DBModel extends Model
     public function delete() {
 
         $sql = "DELETE FROM `{$this->getTableName()}` WHERE `id` = :id";
-        var_dump($sql);
         Db::getInstance()->execute($sql, ['id' => $this->id]);
     }
 

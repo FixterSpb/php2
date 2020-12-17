@@ -4,6 +4,8 @@
 namespace app\controllers;
 
 use app\interfaces\IRenderer;
+use app\models\{User, Basket};
+use app\engine\App;
 
 class Controller
 {
@@ -11,15 +13,16 @@ class Controller
     protected $defaultAction = 'index';
     protected $layout = 'main';
     protected $useLayout = true;
-    protected $renderer;
+    protected $app;
 
-    function __construct(IRenderer $renderer)
+    function __construct(App $app)
     {
-        $this->renderer = $renderer;
+        $this->app = $app;
     }
 
-    public function runAction($action = null) {
-        $this->action = $action ?: $this->defaultAction;
+    public function runAction() {
+        $this->action = $this->app->getRequest()->getActionName() ?: $this->defaultAction;
+
         $method = "action" . ucfirst($this->action);
         if (method_exists($this, $method)) {
             $this->$method();
@@ -30,8 +33,13 @@ class Controller
 
     public function render($template, $params = []) {
         if ($this->useLayout) {
+            $session = $this->app->getSession();
             return $this->renderTemplate("layouts/{$this->layout}", [
-                'menu' =>  $this->renderTemplate('menu', $params),
+                'menu' =>  $this->renderTemplate('menu', [
+                    'auth' => User::isAuth($session),
+                    'username' => User::getLogin($session),
+                    'countBasket' => Basket::getCount($session->getId()),
+                ]),
                 'content' => $this->renderTemplate($template, $params)
             ]);
         } else {
@@ -40,6 +48,6 @@ class Controller
     }
 
     public function renderTemplate($template, $params = []) {
-        return $this->renderer->renderTemplate($template, $params);
+        return $this->app->getRender()->renderTemplate($template, $params);
     }
 }

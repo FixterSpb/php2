@@ -21,7 +21,6 @@ final class Db
 
     protected function getConnection() {
         if (is_null($this->connection)) {
-//            var_dump("Подключаюсь к БД!");
             $this->connection = new \PDO($this->prepareDsnString(),
                 $this->config['login'],
                 $this->config['password']);
@@ -63,14 +62,7 @@ final class Db
         return $stmt->fetch();
     }
 
-    public function queryObject_1($sql, $params = [], $class) {
-        $stmt = $this->query($sql, $params);
-//        $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
-        $stmt->setFetchMode(\PDO::FETCH_INTO, $class);
-        return $stmt->fetch();
-    }
-
-    public function execute($sql, $params) {
+    public function execute($sql, $params = []) {
         return $this->query($sql, $params)->rowCount();
     }
 
