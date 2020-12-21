@@ -1,0 +1,64 @@
+<?php
+
+
+namespace app\controllers;
+
+use app\engine\Request;
+use app\models\entities\Basket;
+use app\models\entities\User;
+use app\models\repositories\BasketRepository;
+
+
+class BasketController extends Controller
+{
+    public function actionIndex(){
+        $basket = (new BasketRepository())->getBasket($this->app->getSession()->getId());
+        $total = array_reduce($basket, fn($accum, $item) => $accum + $item['amount'], 0);
+        echo $this->render('basket', ['basket' => $basket, 'total' => $total]);
+    }
+
+    public function actionAdd() {
+
+        $product_id = $this->app->getRequest()->getParams()['id'];
+        $session_id = $this->app->getSession()->getId();
+
+        $basketRepository = new BasketRepository();
+
+        if(!$basketItem = $basketRepository->getBasketItem($session_id, $product_id)){
+            $basketItem = new Basket($product_id, $session_id, 0);
+        };
+
+        $basketItem->qty++;
+        $basketRepository->save($basketItem);
+
+        $response = [
+            'countBasket' => $basketRepository->getCount($session_id),
+            'status' => 'ok',
+        ];
+
+        echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
+
+    public function actionDelete(){
+        $params = $this->app->getRequest()->getParams();
+        $basket_id = $params['basket_id'];
+        $dec = $params['qty'];
+        $basketRepository = new BasketRepository();
+        $basketItem = $basketRepository->getOne($basket_id);
+        $basketItem->qty -= $dec;
+        if ($basketItem->qty > 0){
+            $basketRepository->save($basketItem);
+        }else {
+            $basketRepository->delete($basketItem);
+        }
+
+
+        $response = [
+            'countBasket' => $basketRepository->getCount($basketItem->session_id),
+            'qty' => $basketItem->qty,
+            'status' => 'ok',
+        ];
+
+        echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+    }
+}
