@@ -3,6 +3,8 @@
 
 namespace app\engine;
 use app\interfaces\IRenderer;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class TwigRender implements IRenderer
 {
@@ -11,21 +13,19 @@ class TwigRender implements IRenderer
     public function __construct()
     {
 
-        $this->twig = new \Twig\Environment(
-            new \Twig\Loader\FilesystemLoader(TWIG_TEMPLATES),[
+        $this->twig = new Environment(
+            new FilesystemLoader(App::call()->config['twig_templates']),[
 //                'cache' => '../cache/TwigCache'
                 //TODO Кэширование убрал, иначе при изменении шаблонов приходится чистить кэш
             ]
-
-
         );
     }
 
     public function renderTemplate($template, $params)
     {
         $templatePath = $template . ".twig";
-        if (file_exists(TWIG_TEMPLATES . $templatePath)){
-            return $this->twig->render($templatePath, $params, );
+        if (file_exists(App::call()->config['twig_templates'] . $templatePath)){
+            return $this->twig->render($templatePath, $params);
         }else{
             vdd($templatePath);
         }

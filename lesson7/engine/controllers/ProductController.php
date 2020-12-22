@@ -18,7 +18,8 @@ class ProductController extends Controller
     public function actionCatalog()
     {
         $page = array_get(App::call()->request->getParams(), 'page', 1);
-        $catalog = App::call()->productRepository->getLimit($page * PRODUCT_PER_PAGE);
+        $catalog = App::call()->productRepository
+            ->getLimit($page * App::call()->config['product_per_page']);
 
         echo $this->render('catalog', [
             'catalog' => $catalog,

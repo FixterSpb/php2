@@ -2,7 +2,7 @@
 use app\engine\Db;
 use app\engine\Request;
 use app\engine\Session;
-use app\engine\Render;
+use app\engine\TwigRender;
 use app\models\repositories\BasketRepository;
 use app\models\repositories\ProductRepository;
 use app\models\repositories\UserRepository;
@@ -12,6 +12,8 @@ use app\models\repositories\OrderRepository;
 return [
     'root_dir' =>  dirname(__DIR__),
     'templates_dir' => dirname(__DIR__) . "/views/",
+    'twig_templates' =>  dirname(__DIR__) . "/TwigTemplates/",
+    'product_per_page' => 1,
     'controllers_namespaces' => 'app\controllers\\',
     'components' => [
         'db' => [
@@ -20,7 +22,7 @@ return [
             'host' => 'localhost',
             'login' => 'root',
             'password' => '',
-            'database' => 'shop',
+            'database' => 'php2',
             'charset' => 'utf8'
         ],
         'request' => [
@@ -42,7 +44,7 @@ return [
             'class' => OrderRepository::class
         ],
         'render' => [
-            'class' => Render::class
+            'class' => TwigRender::class
         ],
 
         'session' => [

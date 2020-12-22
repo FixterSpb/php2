@@ -13,7 +13,8 @@ use app\models\repositories\BasketRepository;
 class BasketController extends Controller
 {
     public function actionIndex(){
-        $basket = App::call()->basketRepository->getBasket($this->app->getSession()->getId());
+        $basket = App::call()->basketRepository->getBasket(
+            App::call()->session->getId());
         $total = array_reduce($basket, fn($accum, $item) => $accum + $item['amount'], 0);
         echo $this->render('basket', ['basket' => $basket, 'total' => $total]);
     }
@@ -46,19 +47,32 @@ class BasketController extends Controller
         $dec = $params['qty'];
         $basketRepository = App::call()->basketRepository;
         $basketItem = $basketRepository->getOne($basket_id);
-        $basketItem->qty -= $dec;
-        if ($basketItem->qty > 0){
-            $basketRepository->save($basketItem);
-        }else {
-            $basketRepository->delete($basketItem);
+
+        if($basketItem->session_id === App::call()->session->getId()){
+            $basketItem->qty -= $dec;
+            if ($basketItem->qty > 0){
+                $basketRepository->save($basketItem);
+            }else {
+                $basketRepository->delete($basketItem);
+            }
+
+            $countBasket = $basketRepository->getCount($basketItem->session_id);
+
+
+            $response = [
+                'countBasket' => $countBasket,
+                'qty' => $basketItem->qty,
+                'status' => 'ok',
+            ];
+        }else{
+            $response = [
+                'countBasket' => $basketRepository->getCount($basketItem->session_id),
+                'qty' => $basketItem->qty,
+                'message' => 'Неверная корзина',
+                'status' => 'error',
+            ];
         }
 
-
-        $response = [
-            'countBasket' => $basketRepository->getCount($basketItem->session_id),
-            'qty' => $basketItem->qty,
-            'status' => 'ok',
-        ];
 
         echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }

@@ -1,10 +1,10 @@
-{% if order|length == 0 %}
+{% if order_items|length == 0 %}
     <h2>Нет заказов</h2>
 {% else %}
     {% if role == 'admin' %}
-        <form action="/order/update" method="post">
+        <form action="/orders/update" method="post">
     {% else %}
-        <form action="/order/add" method="post">
+        <form action="/orders/add" method="post">
     {% endif  %}
         <table style="max-width: 768px; margin: 0 auto">
             <tr>
@@ -15,7 +15,7 @@
                 <th></th>
             </tr>
 
-            {% for item in order %}
+            {% for item in order_items %}
                 <tr class="order__tr" id="order-{{ item.order_id }}">
                     <td style="padding: 5px" class="order__name">{{ item.name }}</td>
                     <td style="padding: 5px; text-align: center" class="order__price" id="price-{{ item.order_id }}">{{ item.price }}</td>
@@ -52,39 +52,28 @@
             </div>
         {% else %}
             <div style="margin: 0 auto; width: 500px">
-                <h3>Заказ № {{ orderData.id }}</h3>
-                <p><b>ФИО: </b>{{ orderData.name }}</p>
+                <h3>Заказ № {{ order.id }}</h3>
+                <p><b>ФИО: </b>{{ order.name }}</p>
 
-                <p><b>E-mail: </b>{{ orderData.email }}</p>
+                <p><b>E-mail: </b>{{ order.email }}</p>
 
-                <p><b>Телефон: </b>{{ orderData.phone }}</p>
+                <p><b>Телефон: </b>{{ order.phone }}</p>
 
-                <p><b>Комментарий: </b>{{ orderData.comment }}</p>
+                <p><b>Комментарий: </b>{{ order.comment }}</p>
 
                 <p><b>Статус: </b>
-                {% if role != 'admin' %}
-                    {% if orderData.status == 'new' %}
+
+                    {% if order.status == 'new' %}
                         Новый
-                    {% elseif orderData.status == 'work' %}
+                    {% elseif order.status == 'work' %}
                         В работе
-                    {% elseif orderData.status == 'paid' %}
+                    {% elseif order.status == 'paid' %}
                         Оплачен
-                    {% elseif orderData.status == 'processed' %}
+                    {% elseif order.status == 'processed' %}
                         Обработан
                     {% endif %}
                     </p>
-                {% else %}
-                    <select name="status">
-                        <option value="new" {% if orderData.status == "new" %}selected{% endif %}>Новый</option>
-                        <option value="work" {% if orderData.status == "work" %}selected{% endif %}>В работе</option>
-                        <option value="paid" {% if orderData.status == "paid" %} selected {% endif %}>Оплачен</option>
-                        <option value="processed" {% if orderData.status == "processed" %} selected {% endif %}>Обработан</option>
-                    </select>
-                    </p>
-                    <br>
-                    <input type="text" name="id" style="display: none" value="{{ orderData.id }}">
-                    <button type="submit">Сохранить</button>
-                {% endif %}
+
             </div>
         {% endif %}
     </form>

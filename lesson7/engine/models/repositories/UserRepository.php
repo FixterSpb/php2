@@ -13,6 +13,7 @@ class UserRepository extends Repository
 
     public function auth($login, $pass) {
         $user = App::call()->usersRepository->getOneWhere('login', $login);
+        if (!$user) return;
         if (password_verify($pass, $user->pass)){
             return $user;
         }
@@ -23,16 +24,16 @@ class UserRepository extends Repository
     }
 
     //Наверное, не логично сюда передавать session, но пока так
-    public function isAuth(Session $session) {
-        return $session->login !== null;
+    public function isAuth() {
+        return App::call()->session->login !== null;
     }
 
-    public function getRole(Session $session){
-        return $session->role;
+    public function getRole(){
+        return App::call()->session->role;
     }
 
-    public function getLogin(Session $session){
-        return $session->login;
+    public function getLogin(){
+        return App::call()->session->login;
     }
 
     protected function getEntityClass()

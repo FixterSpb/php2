@@ -1,7 +1,7 @@
 {% if basket|length == 0 %}
     <h2>Корзина пуста</h2>
 {% else %}
-    <form action="/order/create" method="post">
+    <form action="/orders/create" method="post" class="basket__form">
         <table style="max-width: 768px; margin: 0 auto">
             <tr>
                 <th style="padding: 5px">Наименование</th>
@@ -18,7 +18,7 @@
                     <td style="padding: 5px; text-align: center" class="basket__price" id="price-{{ item.basket_id }}">{{ item.price }}</td>
                     <td style="padding: 5px; text-align: center" class="basket__qty" id="qty-{{ item.basket_id }}">{{ item.qty }}</td>
                     <td style="padding: 5px; text-align: center" class="basket__amount" id="amount-{{ item.basket_id }}">{{ item.amount }}</td>
-                    <td><button data-basket_id="{{ item.basket_id }}" class="bn_delete">X</button></td>
+                    <td><button type="button" data-basket_id="{{ item.basket_id }}" class="bn_delete">X</button></td>
 
                 </tr>
             {% endfor %}
@@ -69,6 +69,14 @@
                     document.querySelector('#total').innerText = total;
 
                     document.querySelector('#count_basket').innerText = answer.countBasket;
+
+                    if (answer.countBasket == 0) {
+                        document.querySelector('.basket__form').remove();
+                        let h2 = document.createElement('h2');
+                        h2.innerText = "Корзина пуста";
+
+                        document.querySelector('body').insertAdjacentElement("beforeend",h2);
+                    }
                 }
             )}
         )

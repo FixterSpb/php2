@@ -52,7 +52,7 @@ final class Db
 
     public function queryLimit($sql, $page) {
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bindValue(1, $page, \PDO::PARAM_INT);
+        $stmt->bindValue(':page', $page, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -64,11 +64,7 @@ final class Db
     public function queryObject($sql, $params, $class) {
         $stmt = $this->query($sql, $params);
         $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
-        $obj =  $stmt->fetch();
-        if (!$obj) {
-            throw new \Exception("Нет такого объекта", 404);
-        }
-        return $obj;
+        return $stmt->fetch();
     }
 
     public function execute($sql, $params = []) {
