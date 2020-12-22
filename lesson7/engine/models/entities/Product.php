@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace app\models\entities;
 
 class Product extends Model {
     protected $id;
@@ -22,7 +22,7 @@ class Product extends Model {
         'status' => false,
     ];
 
-    protected function __construct($name = null, $description = null, $price = 0, $sale = 0,
+    public function __construct($name = null, $description = null, $price = 0, $sale = 0,
                                 $category_id = 0, $main_img = null, $status = 'active')
     {
         $this->name = $name;

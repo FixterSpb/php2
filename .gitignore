@@ -26,3 +26,7 @@ lesson7/engine/.idea/
 lesson7/engine/vendor/
 
 lesson7/engine/composer.bat
+
+lesson7/engine/comp.bat
+
+lesson7/engine/composer.phar
