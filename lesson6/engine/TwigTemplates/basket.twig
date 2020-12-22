@@ -1,0 +1,71 @@
+{% if basket|length == 0 %}
+    <h2>Корзина пуста</h2>
+{% else %}
+
+<table style="max-width: 768px; margin: 0 auto">
+    <tr>
+        <th style="padding: 5px">Наименование</th>
+        <th style="padding: 5px; text-align: center">Цена,  руб.</th>
+        <th style="padding: 5px; text-align: center">Количество</th>
+        <th style="padding: 5px; text-align: center">Сумма,  руб.</th>
+        <th></th>
+    </tr>
+{#    {{ total = 0 }}#}
+    {% for item in basket %}
+{#        {{ total += item.amount }}#}
+        <tr class="basket__tr" id="basket-{{ item.basket_id }}">
+            <td style="padding: 5px" class="basket__name">{{ item.name }}</td>
+            <td style="padding: 5px; text-align: center" class="basket__price" id="price-{{ item.basket_id }}">{{ item.price }}</td>
+            <td style="padding: 5px; text-align: center" class="basket__qty" id="qty-{{ item.basket_id }}">{{ item.qty }}</td>
+            <td style="padding: 5px; text-align: center" class="basket__amount" id="amount-{{ item.basket_id }}">{{ item.amount }}</td>
+            <td><button data-basket_id="{{ item.basket_id }}" class="bn_delete">X</button></td>
+
+        </tr>
+    {% endfor %}
+    <tr>
+        <th colspan="3" style="text-align: right">Итого: </th>
+        <th id="total">{{ total }}</th>
+    </tr>
+</table>
+
+    <script>
+        "use strict";
+        document.querySelectorAll('.bn_delete').forEach(bn => {
+            let basket_id = bn.getAttribute('data-basket_id');
+            bn.addEventListener('click',
+                async () => {
+                    const response = await fetch("/basket/delete/", {
+                        method: 'delete',
+                        header: {
+                            "Content-type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            basket_id: basket_id,
+                            qty: 1
+                        })
+
+                    }).catch();
+
+                    const answer = await response.json();
+
+                    if (answer.qty === 0){
+                        document.querySelector('#basket-' + basket_id).remove();
+
+                    }else{
+                        document.querySelector('#qty-' + basket_id).innerText = answer.qty;
+                        const price = +document.querySelector('#price-' + basket_id).innerText;
+                        document.querySelector('#amount-' + basket_id).innerText = answer.qty * price;
+                    }
+
+                    let total = 0;
+                    document.querySelectorAll('.basket__amount').forEach(item => {
+                        total += +item.innerText;
+                    });
+                    document.querySelector('#total').innerText = total;
+
+                    document.querySelector('#count_basket').innerText = answer.countBasket;
+                }
+            )}
+        )
+    </script>
+{% endif %}

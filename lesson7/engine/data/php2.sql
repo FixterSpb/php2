@@ -1,0 +1,283 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.2
+-- https://www.phpmyadmin.net/
+--
+-- Хост: localhost
+-- Время создания: Дек 22 2020 г., 17:16
+-- Версия сервера: 8.0.19
+-- Версия PHP: 7.4.4
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- База данных: `php2`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `basket`
+--
+
+CREATE TABLE `basket` (
+  `id` int NOT NULL,
+  `session_id` varchar(256) NOT NULL,
+  `product_id` int UNSIGNED NOT NULL,
+  `qty` int UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `basket`
+--
+
+INSERT INTO `basket` (`id`, `session_id`, `product_id`, `qty`) VALUES
+(10, 'fjfeob0b7irqejis74qiu038kr', 1, 5),
+(13, 'fjfeob0b7irqejis74qiu038kr', 13, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `status` enum('active','deleted') NOT NULL DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `status`) VALUES
+(1, 'ноутбуки новые', 'active'),
+(4, 'Чай', 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int UNSIGNED NOT NULL,
+  `session_id` varchar(256) NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `email` varchar(256) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `comment` varchar(1024) NOT NULL,
+  `total` decimal(16,2) NOT NULL,
+  `status` enum('new','work','paid','processed') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'new'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `orders`
+--
+
+INSERT INTO `orders` (`id`, `session_id`, `name`, `email`, `phone`, `comment`, `total`, `status`) VALUES
+(1, 'eo37ms6vqpqc1c8u30cehqtsst', 'Евгений Младшев', 'fixter.spb@gmail.com', '666', 'setygxrhdxryhbtgh', '80997.00', 'paid'),
+(2, 'vlfc6iuj99tqvado7o4iv9grvf', 'Евгений Младшев', 'fixter.spb@gmail.com', 'ваыпича', 'вариапркасп', '26999.00', 'processed'),
+(3, 'p4t6sj4kn0mp7csuaun8p3qqpq', 'Евгений Младшев', 'fixter.spb@gmail.com', 'syte', 'dryuhrth', '26999.00', 'new'),
+(4, 'eo37ms6vqpqc1c8u30cehqtsst', 'Евгений Младшев', 'fixter.spb@gmail.com', 'ytrydr', 'dyrrtyhcd rth', '26999.00', 'paid'),
+(5, 'ki3tb11cvsiduubthn2g7eiogj', 'Евгений Младшев', 'fixter.spb@gmail.com', 'rfwefawef', 'gzcvesdfgvser', '53998.00', 'new');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `order_item`
+--
+
+CREATE TABLE `order_item` (
+  `id` int UNSIGNED NOT NULL,
+  `order_id` int UNSIGNED NOT NULL,
+  `product_id` int UNSIGNED NOT NULL,
+  `price` decimal(22,2) NOT NULL,
+  `qty` int UNSIGNED NOT NULL,
+  `sale` int UNSIGNED NOT NULL DEFAULT '0',
+  `amount` decimal(22,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `order_item`
+--
+
+INSERT INTO `order_item` (`id`, `order_id`, `product_id`, `price`, `qty`, `sale`, `amount`) VALUES
+(3, 1, 1, '26999.00', 3, 0, '80997.00'),
+(4, 2, 1, '26999.00', 1, 0, '26999.00'),
+(5, 3, 1, '26999.00', 1, 0, '26999.00'),
+(6, 4, 1, '26999.00', 1, 0, '26999.00'),
+(7, 5, 1, '26999.00', 2, 0, '53998.00');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `products`
+--
+
+CREATE TABLE `products` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `price` decimal(12,2) NOT NULL,
+  `sale` int UNSIGNED NOT NULL DEFAULT '0',
+  `category_id` int UNSIGNED NOT NULL,
+  `main_img` varchar(255) DEFAULT NULL,
+  `status` enum('active','deleted') NOT NULL DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `description`, `price`, `sale`, `category_id`, `main_img`, `status`) VALUES
+(1, 'Ноутбук HP Chromebook x360 14b-ca0000ur серебристый', 'Встречайте универсальный ноутбук Chromebook, который обеспечивает необходимые производительность и развлекательные функции благодаря лучшим', '26999.00', 0, 1, '', 'active'),
+(2, 'Ноутбук Acer Aspire 3 A315-22-48FX черный', 'Это не просто ноутбук.', '28999.00', 0, 1, NULL, 'active'),
+(13, 'Принцесса Дури', 'Вкусный цейлонский чай', '56.00', 0, 4, NULL, 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `users`
+--
+
+CREATE TABLE `users` (
+  `id` int UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `pass` varchar(255) NOT NULL,
+  `login` varchar(64) NOT NULL,
+  `session_id` varchar(256) NOT NULL,
+  `role` enum('user','admin') NOT NULL DEFAULT 'user'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `pass`, `login`, `session_id`, `role`) VALUES
+(25, 'Alex', '$2y$10$Ngr27/EVT0bVVaCtwldrA.G.AC3r7V4qqhqwGyyqp5.00v7Yd9ssW', 'Alex', 'vlfc6iuj99tqvado7o4iv9grvf', 'user'),
+(26, 'admin', '$2y$10$Ngr27/EVT0bVVaCtwldrA.G.AC3r7V4qqhqwGyyqp5.00v7Yd9ssW', 'admin', 'eo37ms6vqpqc1c8u30cehqtsst', 'admin');
+
+--
+-- Индексы сохранённых таблиц
+--
+
+--
+-- Индексы таблицы `basket`
+--
+ALTER TABLE `basket`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `session_id` (`session_id`),
+  ADD KEY `fk_product_id` (`product_id`);
+
+--
+-- Индексы таблицы `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `session_id` (`session_id`);
+
+--
+-- Индексы таблицы `order_item`
+--
+ALTER TABLE `order_item`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Индексы таблицы `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_category_product` (`category_id`);
+
+--
+-- Индексы таблицы `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `login` (`login`),
+  ADD UNIQUE KEY `session_id` (`session_id`);
+
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `basket`
+--
+ALTER TABLE `basket`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT для таблицы `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT для таблицы `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT для таблицы `order_item`
+--
+ALTER TABLE `order_item`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT для таблицы `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT для таблицы `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `basket`
+--
+ALTER TABLE `basket`
+  ADD CONSTRAINT `fk_product_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Ограничения внешнего ключа таблицы `order_item`
+--
+ALTER TABLE `order_item`
+  ADD CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `fk_order_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Ограничения внешнего ключа таблицы `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `fk_category_product` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

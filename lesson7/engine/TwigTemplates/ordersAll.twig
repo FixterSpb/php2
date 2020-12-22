@@ -1,0 +1,101 @@
+{% if orders|length == 0 %}
+    <h2>Нет заказов</h2>
+{% else %}
+    {% if role == 'admin' %}
+    <p><i>Ввел столбец Session_id, чтобы было видно, что admin видит все заказы, а то сам запутался :-)</i></p>
+        <table style="max-width: 768px; margin: 0 auto">
+            <tr>
+                <th  style="padding: 5px">Номер заказа</th>
+                <th  style="padding: 5px">Session_id</th>
+                <th  style="padding: 5px">ФИО заказчика</th>
+                <th  style="padding: 5px">E-mail</th>
+                <th  style="padding: 5px">Номер телефона</th>
+                <th  style="padding: 5px">Сумма</th>
+                <th  style="padding: 5px">Статус</th>
+            </tr>
+
+            {% for item in orders %}
+            <tr class="orders__tr" data-id="{{ item.id }}">
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.id }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.session_id }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.name }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.email }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.phone }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.total }}</td>
+                <td  style="padding: 5px; cursor: pointer" data-id="{{ item.id }}">
+                    <select name="status" id="orders__select" data-id="{{ item.id }}">
+                        <option value="new" {% if item.status == "new" %}selected{% endif %}>Новый</option>
+                        <option value="work" {% if item.status == "work" %}selected{% endif %}>В работе</option>
+                        <option value="paid" {% if item.status == "paid" %} selected {% endif %}>Оплачен</option>
+                        <option value="processed" {% if item.status == "processed" %} selected {% endif %}>Обработан</option>
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <table style="max-width: 768px; margin: 0 auto">
+            <tr>
+                <th  style="padding: 5px">Номер заказа</th>
+                <th  style="padding: 5px">Сумма</th>
+                <th  style="padding: 5px">Статус</th>
+            </tr>
+
+            {% for item in orders %}
+                <tr class="orders__tr" data-id="{{ item.id }}">
+                    <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.id }}</td>
+                    <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.total }}</td>
+                    <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">
+                        {% if item.status == 'new' %}
+                            Новый
+                        {% elseif item.status == 'work' %}
+                            В работе
+                        {% elseif item.status == 'paid' %}
+                            Оплачен
+                        {% elseif item.status == 'processed' %}
+                            Обработан
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+
+    <script>
+        document.querySelectorAll('.orders__td').forEach(el => {
+            el.addEventListener('click', () => {
+                console.dir(el.getAttribute('data-id'));
+                location.href = "/orders/browse/?id=" + el.getAttribute('data-id');
+            })
+        });
+
+        document.querySelectorAll('#orders__select').forEach(el => {
+            el.addEventListener('change', () =>{
+                (
+                    async () => {
+                        const response = await fetch('/orders/update',
+                            {
+                                method: 'post',
+                                header: {
+                                    'Content-type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id: el.getAttribute('data-id'),
+                                    status: el.value,
+                                })
+                            })
+
+                        const answer = await response.json();
+
+                        if (answer.status != 'ok'){
+                            console.log(answer);
+                        }
+
+                })();
+            })
+        })
+
+    </script>
+{% endif %}
+
