@@ -1,0 +1,91 @@
+{% if order|length == 0 %}
+    <h2>Нет заказов</h2>
+{% else %}
+    {% if role == 'admin' %}
+        <form action="/order/update" method="post">
+    {% else %}
+        <form action="/order/add" method="post">
+    {% endif  %}
+        <table style="max-width: 768px; margin: 0 auto">
+            <tr>
+                <th style="padding: 5px">Наименование</th>
+                <th style="padding: 5px; text-align: center">Цена,  руб.</th>
+                <th style="padding: 5px; text-align: center">Количество</th>
+                <th style="padding: 5px; text-align: center">Сумма,  руб.</th>
+                <th></th>
+            </tr>
+
+            {% for item in order %}
+                <tr class="order__tr" id="order-{{ item.order_id }}">
+                    <td style="padding: 5px" class="order__name">{{ item.name }}</td>
+                    <td style="padding: 5px; text-align: center" class="order__price" id="price-{{ item.order_id }}">{{ item.price }}</td>
+                    <td style="padding: 5px; text-align: center" class="order__qty" id="qty-{{ item.order_id }}">{{ item.qty }}</td>
+                    <td style="padding: 5px; text-align: center" class="order__amount" id="amount-{{ item.order_id }}">{{ item.amount }}</td>
+
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <th colspan="3" style="text-align: right">Итого: </th>
+                <th id="total">{{ total }}</th>
+            </tr>
+
+        </table>
+        {% if create %}
+            <input  name="total" style="display: none" value="{{ total }}">
+            <div style="margin: 0 auto; width: 500px">
+
+                <h3>Персональные данные</h3>
+                <label for="name" style="display: inline-block; margin: 10px 0; min-width: 70px">ФИО: </label>
+                <input type="text" placeholder="ФИО" name="name">
+                <br>
+                <label for="email" style="display: inline-block; margin: 10px 0; min-width: 70px">E-mail: </label>
+                <input type="email" name="email" placeholder="E-mail">
+                <br>
+                <label for="phone" style="display: inline-block; margin: 10px 0; min-width: 70px">Телефон: </label>
+                <input type="text" name="phone" placeholder="Телефон">
+                <br>
+                <label for="comment">Комментарий: </label><br>
+                <textarea type="email" name="comment" placeholder="Комментарий к заказу" cols="50" rows="10"></textarea>
+                    <br>
+                    <button type="submit">Подтвердить</button>
+            </div>
+        {% else %}
+            <div style="margin: 0 auto; width: 500px">
+                <h3>Заказ № {{ orderData.id }}</h3>
+                <p><b>ФИО: </b>{{ orderData.name }}</p>
+
+                <p><b>E-mail: </b>{{ orderData.email }}</p>
+
+                <p><b>Телефон: </b>{{ orderData.phone }}</p>
+
+                <p><b>Комментарий: </b>{{ orderData.comment }}</p>
+
+                <p><b>Статус: </b>
+                {% if role != 'admin' %}
+                    {% if orderData.status == 'new' %}
+                        Новый
+                    {% elseif orderData.status == 'work' %}
+                        В работе
+                    {% elseif orderData.status == 'paid' %}
+                        Оплачен
+                    {% elseif orderData.status == 'processed' %}
+                        Обработан
+                    {% endif %}
+                    </p>
+                {% else %}
+                    <select name="status">
+                        <option value="new" {% if orderData.status == "new" %}selected{% endif %}>Новый</option>
+                        <option value="work" {% if orderData.status == "work" %}selected{% endif %}>В работе</option>
+                        <option value="paid" {% if orderData.status == "paid" %} selected {% endif %}>Оплачен</option>
+                        <option value="processed" {% if orderData.status == "processed" %} selected {% endif %}>Обработан</option>
+                    </select>
+                    </p>
+                    <br>
+                    <input type="text" name="id" style="display: none" value="{{ orderData.id }}">
+                    <button type="submit">Сохранить</button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </form>
+{% endif %}

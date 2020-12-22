@@ -1,1 +1,1 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":124:{a:2:{s:7:"defects";a:1:{s:26:"ProductTest::testConstruct";i:4;}s:5:"times";a:1:{s:26:"ProductTest::testConstruct";d:0.006;}}}
+C:37:"PHPUnit\Runner\DefaultTestResultCache":274:{a:2:{s:7:"defects";a:2:{s:26:"ProductTest::testConstruct";i:4;s:5:"Error";i:4;}s:5:"times";a:4:{s:26:"ProductTest::testConstruct";d:0.006;s:5:"Error";d:0.003;s:43:"ProductTest::testConstruct with data set #0";d:0.037;s:43:"ProductTest::testConstruct with data set #1";d:0;}}}

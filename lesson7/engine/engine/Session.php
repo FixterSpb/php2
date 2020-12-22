@@ -28,7 +28,10 @@ class Session
     }
 
     public function setId($id){
+        $this->destroy();
         session_id($id);
+        $this->start();
+
     }
 
     public function destroy(){
@@ -37,9 +40,6 @@ class Session
 
     public function regenerate(){
         session_regenerate_id();
-//        $session = new \app\engine\Session();
-//        $session->regenerateSession();
-//        $session->destroySession();
     }
 
 }

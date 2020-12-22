@@ -4,8 +4,8 @@
     <br>
 {% else %}
     <form action="/auth/login/" method="post">
-        <input type="text" name="login" placeholder="Логин">
-        <input type="text" name="password" placeholder="Пароль">
+        <input type="text" name="login" placeholder="Логин" value="Alex">
+        <input type="text" name="password" placeholder="Пароль" value="123">
         <input type="submit" name="submit" value="Войти">
     </form>
 {% endif %}
@@ -13,4 +13,5 @@
 <a href="/">Главная</a>
 <a href="/product/catalog">Каталог</a>
 <a href="/basket">Корзина (<span id="count_basket">{{ countBasket }}</span>)</a>
+<a href="/orders/">Заказы</a>
 <br>

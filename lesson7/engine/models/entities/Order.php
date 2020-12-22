@@ -1,31 +1,40 @@
 <?php
 
 
-namespace app\models;
+namespace app\models\entities;
 
 
 class Order extends Model
 {
     protected $id;
-    protected $user_id;
-    protected $user_comment;
-    protected $amount;
+    protected $session_id;
+    protected $name;
+    protected $email;
+    protected $phone;
+    protected $comment;
     protected $status;
+    protected $total;
 
     protected $props =
         [
-            'user_id' => false,
-            'user_comment' => false,
-            'amount' => false,
+            'session_id' => false,
+            'name' => false,
+            'email' => false,
+            'phone' => false,
+            'comment' => false,
             'status' => false,
+            'total' => false,
         ];
 
-    public function __construct($user_id, $amount = 0, $status = 'new', $user_comment = null)
+    public function __construct($session_id = null, $name = null, $email = null, $phone = null, $comment = null, $status = 'new', $total = null)
     {
-        $this->user_id = $user_id;
-        $this->user_comment = $user_comment;
-        $this->amount = $amount;
+        $this->session_id = $session_id;
+        $this->name = $name;
+        $this->email = $email;
+        $this->phone = $phone;
+        $this->comment = $comment;
         $this->status = $status;
+        $this->total = $total;
     }
 
     static protected function getTableName()

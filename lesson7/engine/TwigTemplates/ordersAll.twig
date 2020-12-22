@@ -1,0 +1,74 @@
+{% if orders|length == 0 %}
+    <h2>Нет заказов</h2>
+{% else %}
+    {% if role == 'admin' %}
+        <table style="max-width: 768px; margin: 0 auto">
+            <tr>
+                <th  style="padding: 5px">Номер заказа</th>
+                <th  style="padding: 5px">ФИО заказчика</th>
+                <th  style="padding: 5px">E-mail</th>
+                <th  style="padding: 5px">Номер телефона</th>
+                <th  style="padding: 5px">Сумма</th>
+                <th  style="padding: 5px">Статус</th>
+            </tr>
+
+            {% for item in orders %}
+            <tr class="orders__tr" data-id="{{ item.id }}">
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.id }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.name }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.email }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.phone }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.total }}</td>
+                <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">
+                    {% if item.status == 'new' %}
+                        Новый
+                    {% elseif item.status == 'work' %}
+                        В работе
+                    {% elseif item.status == 'paid' %}
+                        Оплачен
+                    {% elseif item.status == 'processed' %}
+                        Обработан
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <table style="max-width: 768px; margin: 0 auto">
+            <tr>
+                <th  style="padding: 5px">Номер заказа</th>
+                <th  style="padding: 5px">Сумма</th>
+                <th  style="padding: 5px">Статус</th>
+            </tr>
+
+            {% for item in orders %}
+                <tr class="orders__tr" data-id="{{ item.id }}">
+                    <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.id }}</td>
+                    <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">{{ item.total }}</td>
+                    <td  style="padding: 5px; cursor: pointer" class="orders__td" data-id="{{ item.id }}">
+                        {% if item.status == 'new' %}
+                            Новый
+                        {% elseif item.status == 'work' %}
+                            В работе
+                        {% elseif item.status == 'paid' %}
+                            Оплачен
+                        {% elseif item.status == 'processed' %}
+                            Обработан
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+
+    <script>
+        document.querySelectorAll('.orders__td').forEach(el => {
+            el.addEventListener('click', () => {
+                console.dir(el.getAttribute('data-id'));
+                location.href = "/order/browse/?id=" + el.getAttribute('data-id');
+            })
+        })
+
+    </script>
+{% endif %}

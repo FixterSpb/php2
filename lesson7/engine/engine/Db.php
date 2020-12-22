@@ -4,6 +4,9 @@ namespace app\engine;
 
 use app\traits\TSingletone;
 
+/**
+ * @static
+ */
 final class Db
 {
     protected $config = [
@@ -61,6 +64,7 @@ final class Db
 //        $stmt->setFetchMode(\PDO::FETCH_INTO, $class);
         return $stmt->fetch();
     }
+
 
     public function execute($sql, $params = []) {
         return $this->query($sql, $params)->rowCount();
