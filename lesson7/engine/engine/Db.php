@@ -9,21 +9,24 @@ use app\traits\TSingletone;
  */
 final class Db
 {
-    protected $config = [
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => '',
-        'database' => 'php2',
-        'charset' => 'utf8'
-    ];
-
-    use TSingletone;
+    protected $config;
 
     protected $connection = null;
 
+    public function __construct($driver, $host, $login, $password, $database, $charset = "utf8")
+    {
+        $this->config['driver'] = $driver;
+        $this->config['host'] = $host;
+        $this->config['login'] = $login;
+        $this->config['password'] = $password;
+        $this->config['database'] = $database;
+        $this->config['charset'] = $charset;
+    }
+
+
     protected function getConnection() {
         if (is_null($this->connection)) {
+            // var_dump("Подключаюсь к БД!");
             $this->connection = new \PDO($this->prepareDsnString(),
                 $this->config['login'],
                 $this->config['password']);
@@ -49,26 +52,29 @@ final class Db
 
     public function queryLimit($sql, $page) {
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bindValue(':page', $page, \PDO::PARAM_INT);
+        $stmt->bindValue(1, $page, \PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     public function lastInsertId() {
-        return $this->getConnection()->lastInsertId();
+        return $this->connection->lastInsertId();
     }
 
-    public function queryObject($sql, $params = [], $class) {
+    public function queryObject($sql, $params, $class) {
         $stmt = $this->query($sql, $params);
         $stmt->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
-//        $stmt->setFetchMode(\PDO::FETCH_INTO, $class);
-        return $stmt->fetch();
+        $obj =  $stmt->fetch();
+        if (!$obj) {
+            throw new \Exception("Нет такого объекта", 404);
+        }
+        return $obj;
     }
-
 
     public function execute($sql, $params = []) {
         return $this->query($sql, $params)->rowCount();
     }
+
 
     public function queryOne($sql, $params = []) {
         return $this->query($sql, $params)->fetch();

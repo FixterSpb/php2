@@ -3,6 +3,7 @@
 
 namespace app\models\repositories;
 
+use app\engine\App;
 use app\models\Repository;
 use app\engine\Session;
 use app\models\entities\User;
@@ -11,8 +12,7 @@ class UserRepository extends Repository
 {
 
     public function auth($login, $pass) {
-        $user = $this->getOneWhere('login', $login);
-//        dd($user);
+        $user = App::call()->usersRepository->getOneWhere('login', $login);
         if (password_verify($pass, $user->pass)){
             return $user;
         }
@@ -32,7 +32,6 @@ class UserRepository extends Repository
     }
 
     public function getLogin(Session $session){
-//        dd($_SESSION);
         return $session->login;
     }
 

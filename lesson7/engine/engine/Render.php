@@ -3,13 +3,14 @@
 
 namespace app\engine;
 use app\interfaces\IRenderer;
+use app\engine\App;
 
 class Render implements IRenderer
 {
     public function renderTemplate($template, $params = []) {
         ob_start();
         extract($params);
-        $templatePath = TEMPLATE_DIR . $template . ".php";
+        $templatePath = App::call()->config['templates_dir'] . $template . ".php";
         if (file_exists($templatePath)){
             include $templatePath;
         }

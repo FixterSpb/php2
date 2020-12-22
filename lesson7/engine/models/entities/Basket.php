@@ -26,8 +26,4 @@ class Basket extends Model
         $this->qty = $qty;
     }
 
-    public static function add($session_id, $id){
-//        $sql
-    }
-
 }

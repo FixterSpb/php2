@@ -4,16 +4,16 @@
 namespace app\controllers;
 
 
-use app\models\repositories\OrderRepository;
+use app\engine\App;
 
 class OrdersController extends Controller
 {
     public function actionIndex(){
-        $role = $this->app->getSession()->role;
+        $role = App::call()->session->role;
         if ($role === 'admin'){
-            $orders = (new OrderRepository())->getWhere();
+            $orders = App::call()->orderRepository->getWhere();
         }else {
-            $orders = (new OrderRepository())->getWhere($this->app->getSession()->getId());
+            $orders = App::call()->orderRepository->getWhere(App::call()->session->getId());
         }
 
         echo $this->render('ordersAll',

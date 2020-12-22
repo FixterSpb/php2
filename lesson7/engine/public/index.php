@@ -1,17 +1,14 @@
 <?php
 
-include "../config/config.php";
-include "../engine/Autoload.php";
+use app\engine\App;
+
 require_once '../vendor/autoload.php';
 require_once '../helpers/helper.php';
 
-use app\engine\Autoload;
-use app\engine\App;
-
-spl_autoload_register([new Autoload(), 'loadClass']);
+$config = include "../config/config.php";
 
 try {
-    (new App)->run();
+   App::call()->run($config);
 }catch (\Exception $e){
     var_dump($e);
 }

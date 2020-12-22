@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\engine\App;
 use app\engine\Db;
 use app\interfaces\IModel;
 use app\models\entities\Model;
@@ -13,19 +14,19 @@ abstract class Repository implements IModel
     {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `$tableName` WHERE `id` = :id";
-        return Db::getInstance()->queryObject($sql, ["id" => $id], $this->getEntityClass());
+        return App::call()->db->queryObject($sql, ["id" => $id], $this->getEntityClass());
     }
 
     public function getLimit($page) {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM `$tableName` LIMIT :page";
-        return Db::getInstance()->queryLimit($sql, $page);
+        return App::call()->db->queryLimit($sql, $page);
     }
 
     public function getAll() {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM $tableName";
-        return Db::getInstance()->queryAll($sql);
+        return App::call()->db->queryAll($sql);
 
     }
 
@@ -33,7 +34,7 @@ abstract class Repository implements IModel
         $tableName = $this->getTableName();
 
         $sql = "SELECT * FROM $tableName WHERE `$name`=:value";
-        return Db::getInstance()->queryObject($sql, ['value' => $value], $this->getEntityClass());
+        return App::call()->db->queryObject($sql, ['value' => $value], $this->getEntityClass());
 
     }
 
@@ -41,7 +42,7 @@ abstract class Repository implements IModel
         $tableName = $this->getTableName();
         $sql = "SELECT count(id) as count FROM $tableName WHERE `$name`=:value";
 
-        return Db::getInstance()->queryOne($sql, ["value" => $value])['count'];
+        return App::call()->db->queryOne($sql, ["value" => $value])['count'];
     }
 
     public static function getSumWhere($name) {
@@ -63,9 +64,8 @@ abstract class Repository implements IModel
 
         $tableName = $this->getTableName();
         $sql = "INSERT INTO `{$tableName}`({$columns}) VALUES ($values)";
-//        dd($sql, $params);
-        Db::getInstance()->execute($sql, $params);
-        $entity->id = Db::getInstance()->lastInsertId();
+        App::call()->db->execute($sql, $params);
+        $entity->id = App::call()->db->lastInsertId();
     }
 
     protected function update(Model $entity) {
@@ -80,7 +80,7 @@ abstract class Repository implements IModel
         $params[':id'] = $entity->id;
         $tableName = $this->getTableName();
         $sql = "UPDATE `{$tableName}` SET {$colums} WHERE `id` = :id";
-        if(Db::getInstance()->execute($sql, $params)) {
+        if(App::call()->db->execute($sql, $params)) {
 
             $entity->clearProps();
         }
@@ -92,7 +92,7 @@ abstract class Repository implements IModel
         $tableName = $this->getTableName();
         $sql = "DELETE FROM {$tableName} WHERE id = :id";
 
-        return Db::getInstance()->execute($sql, [':id' => $entity->id]);
+        return App::call()->db->execute($sql, [':id' => $entity->id]);
     }
 
     public function save($entity) {

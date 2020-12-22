@@ -3,6 +3,7 @@
 
 namespace app\controllers;
 
+use app\engine\App;
 use app\engine\Request;
 use app\models\entities\Basket;
 use app\models\entities\User;
@@ -12,17 +13,17 @@ use app\models\repositories\BasketRepository;
 class BasketController extends Controller
 {
     public function actionIndex(){
-        $basket = (new BasketRepository())->getBasket($this->app->getSession()->getId());
+        $basket = App::call()->basketRepository->getBasket($this->app->getSession()->getId());
         $total = array_reduce($basket, fn($accum, $item) => $accum + $item['amount'], 0);
         echo $this->render('basket', ['basket' => $basket, 'total' => $total]);
     }
 
     public function actionAdd() {
 
-        $product_id = $this->app->getRequest()->getParams()['id'];
-        $session_id = $this->app->getSession()->getId();
+        $product_id = App::call()->request->getParams()['id'];
+        $session_id = App::call()->session->getId();
 
-        $basketRepository = new BasketRepository();
+        $basketRepository = App::call()->basketRepository;
 
         if(!$basketItem = $basketRepository->getBasketItem($session_id, $product_id)){
             $basketItem = new Basket($product_id, $session_id, 0);
@@ -40,10 +41,10 @@ class BasketController extends Controller
     }
 
     public function actionDelete(){
-        $params = $this->app->getRequest()->getParams();
+        $params = App::call()->request->getParams();
         $basket_id = $params['basket_id'];
         $dec = $params['qty'];
-        $basketRepository = new BasketRepository();
+        $basketRepository = App::call()->basketRepository;
         $basketItem = $basketRepository->getOne($basket_id);
         $basketItem->qty -= $dec;
         if ($basketItem->qty > 0){

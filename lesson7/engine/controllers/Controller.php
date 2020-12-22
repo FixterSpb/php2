@@ -13,15 +13,14 @@ class Controller
     protected $defaultAction = 'index';
     protected $layout = 'main';
     protected $useLayout = true;
-    protected $app;
 
-    function __construct(App $app)
-    {
-        $this->app = $app;
-    }
+//    function __construct(App $app)
+//    {
+//        $this->app = $app;
+//    }
 
     public function runAction() {
-        $this->action = $this->app->getRequest()->getActionName() ?: $this->defaultAction;
+        $this->action = App::call()->request->getActionName() ?: $this->defaultAction;
 
         $method = "action" . ucfirst($this->action);
         if (method_exists($this, $method)) {
@@ -33,9 +32,9 @@ class Controller
 
     public function render($template, $params = []) {
         if ($this->useLayout) {
-            $session = $this->app->getSession();
-            $userRepository = new UserRepository();
-            $basketRepository = new BasketRepository();
+            $session = App::call()->session;
+            $userRepository = App::call()->usersRepository;
+            $basketRepository = App::call()->basketRepository;
             return $this->renderTemplate("layouts/{$this->layout}", [
                 'menu' =>  $this->renderTemplate('menu', [
                     'auth' => $userRepository->isAuth($session),
@@ -50,6 +49,6 @@ class Controller
     }
 
     public function renderTemplate($template, $params = []) {
-        return $this->app->getRender()->renderTemplate($template, $params);
+        return App::call()->render->renderTemplate($template, $params);
     }
 }

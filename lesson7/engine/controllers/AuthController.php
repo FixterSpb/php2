@@ -3,6 +3,7 @@
 
 namespace app\controllers;
 
+use app\engine\App;
 use app\models\entities\User;
 use app\models\repositories\UserRepository;
 
@@ -10,16 +11,16 @@ class AuthController extends Controller
 {
 
     public function actionLogin(){
-        $request = $this->app->getRequest();
+        $request = App::call()->request;
         $params = $request->getParams();
         $login = array_get($params, 'login');
         $pass = array_get($params, 'password');
 
-        $userRepository = new UserRepository();
+        $userRepository = App::call()->usersRepository;
 
 
         if ($user = $userRepository->auth($login, $pass)) {
-            $session = $this->app->getSession();
+            $session = App::call()->session;
             if ($user->session_id) $session->setId($user->session_id);
             else {
                 $user->session_id = $session->getId();
@@ -35,7 +36,7 @@ class AuthController extends Controller
     }
 
     public function actionLogout(){
-        $session = $this->app->getSession();
+        $session = App::call()->session;
         $session->regenerate();
         $session->destroy();
         header('Location: /');
