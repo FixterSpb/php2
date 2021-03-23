@@ -32,3 +32,7 @@ lesson7/engine/comp.bat
 lesson7/engine/composer.phar
 
 lesson7/engine/composer1.bat
+
+engine/.idea/
+
+engine/vendor/
