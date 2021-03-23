@@ -1,0 +1,18 @@
+{% if auth  %}
+    Добро пожаловать, {{ username }}
+    <a href="/auth/logout/">[Выход]</a>
+    <br>
+{% else %}
+    <form action="/auth/login/" method="post">
+        <input type="text" name="login" placeholder="Логин" value="Alex">
+        <input type="text" name="password" placeholder="Пароль" value="123">
+        <input type="submit" name="submit" value="Войти">
+    </form>
+    <p><i>В БД два пользователя: Alex и admin. У обоих пароль 123</i></p>
+{% endif %}
+
+<a href="/">Главная</a>
+<a href="/product/catalog">Каталог</a>
+<a href="/basket">Корзина (<span id="count_basket">{{ countBasket }}</span>)</a>
+<a href="/orders/">Заказы</a>
+<br>
